@@ -174,9 +174,9 @@ def setup_for_distributed(is_master):
     builtin_print = builtins.print
 
     def print(*args, **kwargs):
-        force = kwargs.pop('force', False)
-        force = force or (get_world_size() > 8)
-        if is_master or force:
+        #force = kwargs.pop('force', False)
+        #force = force or (get_world_size() > 8)
+        if is_master:
             now = datetime.datetime.now().time()
             builtin_print('[{}] '.format(now), end='')  # print with time stamp
             builtin_print(*args, **kwargs)
@@ -291,6 +291,7 @@ def init_distributed_mode_ddp(gpu,ngpus_per_node,args):
     args.distributed = True
 
     torch.cuda.set_device(args.gpu)
+    torch.cuda.empty_cache()
     args.dist_backend = 'nccl'
     print('| distributed init (rank {}): {}, gpu {}'.format(
         args.rank, args.dist_url, args.gpu), flush=True)

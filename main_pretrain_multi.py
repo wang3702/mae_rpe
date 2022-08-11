@@ -145,11 +145,13 @@ def main(gpu, ngpus_per_node,args):
         misc.init_distributed_mode2(gpu,ngpus_per_node,args)
     elif args.torch==2:
         misc.init_distributed_mode_ddp(gpu,ngpus_per_node,args)
+
     print('job dir: {}'.format(os.path.dirname(os.path.realpath(__file__))))
     print("{}".format(args).replace(', ', ',\n'))
     device = torch.device(args.device)
 
     # fix the seed for reproducibility
+    print("check rank: {}".format(misc.get_rank()))
     seed = args.seed + misc.get_rank()
     torch.manual_seed(seed)
     np.random.seed(seed)
