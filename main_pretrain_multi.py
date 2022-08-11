@@ -141,7 +141,10 @@ def add_weight_decay(model,lr,adv_lr,weight_decay=1e-5,adv_wd=1e-5, skip_list=()
         {'params': no_decay2, 'weight_decay': -adv_wd,"lr":-adv_lr,'fix_lr':0},
         ]
 def main(gpu, ngpus_per_node,args):
-    misc.init_distributed_mode2(gpu,ngpus_per_node,args)
+    if args.torch==1:
+        misc.init_distributed_mode2(gpu,ngpus_per_node,args)
+    elif args.torch==2:
+        misc.init_distributed_mode_ddp(gpu,ngpus_per_node,args)
     print('job dir: {}'.format(os.path.dirname(os.path.realpath(__file__))))
     print("{}".format(args).replace(', ', ',\n'))
     device = torch.device(args.device)
@@ -315,7 +318,7 @@ if __name__ == '__main__':
     args = args.parse_args()
     if args.output_dir:
         Path(args.output_dir).mkdir(parents=True, exist_ok=True)
-    if args.torch:
+    if args.torch==1 or args.torch==2:
         import socket
         hostname = socket.gethostname()
         local_ip = socket.gethostbyname(hostname)
