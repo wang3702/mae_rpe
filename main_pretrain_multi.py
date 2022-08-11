@@ -10,7 +10,7 @@
 # BEiT: https://github.com/microsoft/unilm/tree/master/beit
 # --------------------------------------------------------
 import os
-print("starting rank:", int(os.environ.get("RANK")))
+#print("starting rank:", int(os.environ.get("RANK")))
 import argparse
 import datetime
 import json

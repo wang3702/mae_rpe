@@ -276,6 +276,7 @@ def init_distributed_mode2(gpu,ngpus_per_node,args):
     setup_for_distributed(args.rank == 0)
 def init_distributed_mode_ddp(gpu,ngpus_per_node,args):
     import resource
+    assert args.dist_url=="env://"
     rlimit = resource.getrlimit(resource.RLIMIT_NOFILE)
     resource.setrlimit(resource.RLIMIT_NOFILE, (2048, rlimit[1]))
     INT_LOCAL_RANK = gpu
