@@ -248,6 +248,33 @@ def init_distributed_mode(args):
     setup_for_distributed(args.rank == 0)
 
 
+def init_distributed_mode2(gpu,ngpus_per_node,args):
+    #python /path/to/launch.py --nnode=1 --node_rank=0 --nproc_per_node=8 example.py --local_world_size=8
+
+    import resource
+    rlimit = resource.getrlimit(resource.RLIMIT_NOFILE)
+    resource.setrlimit(resource.RLIMIT_NOFILE, (2048, rlimit[1]))
+    args.gpu = gpu
+    args.rank = args.rank * ngpus_per_node + gpu
+    os.environ['LOCAL_RANK'] = str(args.gpu)
+    os.environ['RANK'] = str(args.rank)
+    os.environ['WORLD_SIZE'] = str(args.world_size)
+    print("make sure the distributed mode is ",args.dist_url)
+
+
+
+    args.distributed = True
+
+    torch.cuda.set_device(args.gpu)
+    args.dist_backend = 'nccl'
+    print('| distributed init (rank {}): {}, gpu {}'.format(
+        args.rank, args.dist_url, args.gpu), flush=True)
+    torch.distributed.init_process_group(backend=args.dist_backend, init_method=args.dist_url,
+                                         timeout=datetime.timedelta(seconds=36000),
+                                         world_size=args.world_size, rank=args.rank)
+
+    setup_for_distributed(args.rank == 0)
+
 class NativeScalerWithGradNormCount:
     state_dict_key = "amp_scaler"
 
