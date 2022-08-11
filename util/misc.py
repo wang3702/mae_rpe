@@ -294,7 +294,7 @@ def init_distributed_mode_ddp(gpu,ngpus_per_node,args):
     args.dist_backend = 'nccl'
     print('| distributed init (rank {}): {}, gpu {}'.format(
         args.rank, args.dist_url, args.gpu), flush=True)
-    torch.distributed.init_process_group(backend=args.dist_backend, init_method=args.dist_url,
+    torch.distributed.init_process_group(backend=args.dist_backend, init_method="env://",
                                          timeout=datetime.timedelta(seconds=36000),
                                          world_size=args.world_size, rank=args.rank)
 
