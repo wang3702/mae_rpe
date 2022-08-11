@@ -9,6 +9,8 @@
 # DeiT: https://github.com/facebookresearch/deit
 # BEiT: https://github.com/microsoft/unilm/tree/master/beit
 # --------------------------------------------------------
+import os
+print("starting rank:", int(os.environ.get("RANK")))
 import argparse
 import datetime
 import json
@@ -327,8 +329,8 @@ if __name__ == '__main__':
         hostname = socket.gethostname()
         local_ip = socket.gethostbyname(hostname)
         print("local ip: ",local_ip)
-        if args.torch==2:
-            print("init rank:", int(os.environ.get("RANK")))
+       # if args.torch==2:
+       #     print("init rank:", int(os.environ.get("RANK")))
         ngpus_per_node = torch.cuda.device_count()
         args.world_size = args.world_size*ngpus_per_node
         mp.spawn(main, nprocs=ngpus_per_node, args=(ngpus_per_node,  args))
