@@ -22,6 +22,7 @@ import torch.backends.cudnn as cudnn
 from torch.utils.tensorboard import SummaryWriter
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
+import torch.multiprocessing as mp
 
 import timm
 
@@ -325,7 +326,8 @@ if __name__ == '__main__':
         hostname = socket.gethostname()
         local_ip = socket.gethostbyname(hostname)
         print("local ip: ",local_ip)
-        import torch.multiprocessing as mp
+        if args.torch==2:
+            print("init rank:", int(os.environ.get("RANK")))
         ngpus_per_node = torch.cuda.device_count()
         args.world_size = args.world_size*ngpus_per_node
         mp.spawn(main, nprocs=ngpus_per_node, args=(ngpus_per_node,  args))
