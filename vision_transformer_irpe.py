@@ -455,4 +455,4 @@ def vit_base_resnet50d_224(pretrained=False, **kwargs):
         img_size=224, embed_dim=768, depth=12, num_heads=12, mlp_ratio=4, hybrid_backbone=backbone, **kwargs)
     model.default_cfg = default_cfgs['vit_base_resnet50d_224']
     return model
-Footer
+
