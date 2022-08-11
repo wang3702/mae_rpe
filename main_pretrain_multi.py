@@ -319,7 +319,7 @@ def main(gpu, ngpus_per_node,args):
 
 
 if __name__ == '__main__':
-    print("initial rank:", int(os.environ.get("RANK")))
+    #print("initial rank:", int(os.environ.get("RANK")))
     args = get_args_parser()
     args = args.parse_args()
     if args.output_dir:
