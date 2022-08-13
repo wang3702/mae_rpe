@@ -243,7 +243,8 @@ class MaskedAutoencoderViT(nn.Module):
         # embed patches
         x = self.patch_embed(x)
 
-
+        # add pos embed w/o cls token
+        x = x + self.pos_embed[:, 1:, :]
 
         # masking: length -> length * mask_ratio
         x, mask, ids_restore = self.random_masking(x, mask_ratio)
@@ -251,8 +252,7 @@ class MaskedAutoencoderViT(nn.Module):
         x = torch.cat([x, mask_tokens], dim=1)  # no cls token
         x = torch.gather(x, dim=1, index=ids_restore.unsqueeze(-1).repeat(1, 1, x.shape[2]))  # unshuffle
 
-         # add pos embed w/o cls token
-        x = x + self.pos_embed[:, 1:, :]
+
 
         # append cls token
         cls_token = self.cls_token + self.pos_embed[:, :1, :]
